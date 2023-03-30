@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Grocery Delivery App</title>
+    <style>
+      img {
+        height: 100px;
+        width: 100px;
+      }
+      table {
+        border-collapse: collapse;
+      }
+      th,
+      td {
+        padding: 8px;
+        text-align: left;
+        border-bottom: 1px solid #ddd;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      #cart {
+        margin-top: 20px;
+      }
+      #checkout-btn {
+        display: block;
+        margin-top: 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Grocery Delivery App</h1>
+    <table>
+      <tr>
+        <td><img src="milk.jpg" /></td>
+        <td>Milk</td>
+        <td>$2.50</td>
+        <td>
+          <button onclick="addToCart('milk')">Add to Cart</button>
+        </td>
+        <td>
+          <input
+            type="number"
+            min="1"
+            value="1"
+            id="milk-quantity"
+            style="width: 50px"
+          />
+        </td>
+      </tr>
+      <tr>
+        <td><img src="bread.jpg" /></td>
+        <td>Bread</td>
+        <td>$1.50</td>
+        <td>
+          <button onclick="addToCart('bread')">Add to Cart</button>
+        </td>
+        <td>
+          <input
+            type="number"
+            min="1"
+            value="1"
+            id="bread-quantity"
+            style="width: 50px"
+          />
+        </td>
+      </tr>
+      <tr>
+        <td><img src="eggs.jpg" /></td>
+        <td>Eggs</td>
+        <td>$3.00</td>
+        <td>
+          <button onclick="addToCart('eggs')">Add to Cart</button>
+        </td>
+        <td>
+          <input
+            type="number"
+            min="1"
+            value="1"
+            id="eggs-quantity"
+            style="width: 50px"
+          />
+        </td>
+      </tr>
+      <tr>
+        <td><img src="fruit.jpg" /></td>
+        <td>Fruit</td>
+        <td>$4.50</td>
+        <td>
+          <button onclick="addToCart('fruit')">Add to Cart</button>
+        </td>
+        <td>
+          <input
+            type="number"
+            min="1"
+            value="1"
+            id="fruit-quantity"
+            style="width: 50px"
+          />
+        </td>
+      </tr>
+    </table>
+    <div id="cart"></div>
+    <button id="checkout-btn" onclick="checkout()">Checkout</button>
+    <script>
+      let cart = {};
+
+      function addToCart(item) {
+        let quantity = parseInt(
+          document.getElementById(item + "-quantity").value
+        );
+        if (isNaN(quantity) || quantity <= 0) {
+          alert("Invalid quantity");
+          return;
+        }
+        if (cart.hasOwnProperty(item)) {
+          cart[item] += quantity;
+        } else {
+          cart[item] = quantity;
+        }
+}
+
+      function removeFromCart(item) {
+        delete cart[item];
+        renderCart();
+      }
+
+      function checkout() {
+        let items = "";
+        let total = 0;
+        for (let item in cart) {
+          let quantity = cart[item];
+          let price = 0;
+          if (item === "milk") {
+            price = 2.5;
+          } else if (item === "bread") {
+            price = 1.5;
+          } else if (item === "eggs") {
+            price = 3;
+          } else if (item === "fruit") {
+            price = 4.5;
+          }
+          items += quantity + " x " + item + " ($" + price + " each)\n";
+          total += quantity * price;
+        }
+        alert("Your order:\n\n" + items + "\nTotal: $" + total);
+      }
+
+      function renderCart() {
+        let cartDiv = document.getElementById("cart");
+        cartDiv.innerHTML = "";
+        let cartTable = document.createElement("table");
+        let cartHeader = cartTable.createTHead();
+        let cartHeaderRow = cartHeader.insertRow(0);
+        let itemHeader = cartHeaderRow.insertCell(0);
+        itemHeader.innerHTML = "<b>Item</b>";
+        let quantityHeader = cartHeaderRow.insertCell(1);
+        quantityHeader.innerHTML = "<b>Quantity</b>";
+        let priceHeader = cartHeaderRow.insertCell(2);
+        priceHeader.innerHTML = "<b>Price</b>";
+        let totalHeader = cartHeaderRow.insertCell(3);
+        totalHeader.innerHTML = "<b>Total</b>";
+        let cartBody = cartTable.createTBody();
+        let i = 0;
+        for (let item in cart) {
+          let quantity = cart[item];
+          let price = 0;
+          if (item === "milk") {
+            price = 2.5;
+          } else if (item === "bread") {
+            price = 1.5;
+          } else if (item === "eggs") {
+            price = 3;
+          } else if (item === "fruit") {
+            price = 4.5;
+          }
+          let row = cartBody.insertRow(i);
+          let itemCell = row.insertCell(0);
+          itemCell.innerHTML = item;
+          let quantityCell = row.insertCell(1);
+          quantityCell.innerHTML = quantity;
+          let priceCell = row.insertCell(2);
+          priceCell.innerHTML = "$" + price.toFixed(2);
+          let totalCell = row.insertCell(3);
+          totalCell.innerHTML = "$" + (quantity * price).toFixed(2);
+          let deleteCell = row.insertCell(4);
+          deleteCell.innerHTML = "<button onclick=\"removeFromCart('" + item + "')\">&#x2716;</button>";
+          i++;
+        }
+        cartDiv.appendChild(cartTable);
+      }
+    </script>
+  </body>
+</html>
